@@ -1,6 +1,13 @@
 from GameSystem import GameSystem
 import pygame
 
+def is_rect(pos,rect):
+    x,y =pos
+    rx,ry,rw,rh = rect
+    if (rx <= x <=rx+rw)and(ry <= y <= ry +rh):
+        return True
+    return False
+
 class GameGUI():
 
     def __init__(self):
@@ -16,7 +23,7 @@ class GameGUI():
                             "roads":None,
                             "legs":None,
                             "character":None,
-                            "umbrella":None,
+                            "umbrella":ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png",50,50),
                             "bag":None,
                             "glasses":None,
                             "phone":None,
@@ -50,11 +57,18 @@ class GameGUI():
         if self.umbrellaEventCount == 0:
             pygame.time.set_timer(self.umbrellaEvent, 300)
             self.umbrellaEventCount = 10
-            pass
+            self.screenParts["umbrella"] = ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\2.png",50,50)
+            self.update_frame()
             # start this event
             # print the clock
         else:
             self.umbrellaEventCount -= 1
+
+            if self.umbrellaEventCount == 0:
+                self.screenParts["umbrella"] = ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png", 50, 50)
+                self.update_frame()
+                pygame.time.set_timer(self.umbrellaEvent, 8000)
+                self.gameSystem.add_failure()
 
             pass
             # update the clock
@@ -63,9 +77,14 @@ class GameGUI():
         pass
 
     def click_in_umbrella(self,x,y):
-        if x==0 and y==0 and self.umbrellaEventCount != 0:
-            pygame.time.set_timer(self.umbrellaEvent,15000)
+        print(x,y)
+        rec = self.screenParts["umbrella"].object.get_rect()
+        if is_rect((x,y),rec) and self.umbrellaEventCount != 0:
+            print("clicked")
+            pygame.time.set_timer(self.umbrellaEvent,8000)
             self.umbrellaEventCount = 0
+            self.screenParts["umbrella"] = ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png", 50, 50)
+            self.update_frame()
 
         # stop the clock
         # redraw the screen
@@ -90,12 +109,14 @@ class GameGUI():
 
     def game_end(self):
         # stop the game, restart, show the score
+        print("game over")
         pass
 
     def game_time(self):
+        print(self.score)
         self.score+=1
         if self.score == 5:
-            pygame.time.set_timer(self.umbrellaEvent,)
+            pygame.time.set_timer(self.umbrellaEvent,8000)
         pass
 
     def update_frame(self):
@@ -170,8 +191,7 @@ class GameGUI():
                         self.doubleClickEventCount = 1
                         pygame.time.set_timer(self.doubleClickEvent,500)
                         # check one click event
-                        if self.click_in_umbrella(event.pos[0],event.pos[1]):
-                            pass
+                        self.click_in_umbrella(event.pos[0],event.pos[1])
 
                     elif self.doubleClickEventCount == 1:
                         self.doubleClickEventCount = 0
