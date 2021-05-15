@@ -42,10 +42,10 @@ class GameGUI():
         self.screenParts = {"background":ScreenObject("./image/background.png",0,0),
                             "water":ScreenObject("./image/water.png",600,600),
                             "legs":None,
-                            "character":None,
-                            "umbrella":ScreenObject("./image/umbrella1.png",500,500),
-                            "bag":None,
-                            "glasses":ScreenObject("./image/glasses.png",700,700),
+                            "character":ScreenObject("./image/person.png",700,300),
+                            "umbrella":ScreenObject("./image/umbrella1.png",630,180),
+                            "bag":ScreenObject("./image/bag.png",0,0),
+                            "glasses":ScreenObject("./image/glasses.png",810,550),
                             "phone":None,
                             "clock_umbrella":None,
                             "clock_water":None,
@@ -105,11 +105,11 @@ class GameGUI():
         partName = "umbrella"
         clockName = "clock_umbrella"
 
-        position1 = (500,500)
-        position2 = (500,500)
-        position3 = (500,500)
-        position4 = (500,500)
-        positionOrigin = (500,500)
+        position1 = (630,180)
+        position2 = (690,195)
+        position3 = (760,135)
+        position4 = (845,190)
+        positionOrigin = (630,180)
         clockPosition = (500,500)
 
         if self.counts[partName]== 0:
@@ -149,7 +149,7 @@ class GameGUI():
         partName = "umbrella"
         clockName = "clock_umbrella"
         pathOrigin = "./image/umbrella1.png"
-        positionOrigin = (500,500)
+        positionOrigin = (630,180)
 
         print(is_rect((x,y),self.screenParts[partName]))
         print(self.counts[partName])
@@ -244,11 +244,11 @@ class GameGUI():
         partName = "glasses"
         clockName = "clock_glasses"
 
-        position1 = (600, 600)
-        position2 = (600, 620)
-        position3 = (600, 640)
-        position4 = (600, 660)
-        positionOrigin = (600, 680)
+        position1 = (810,550)
+        position2 = (810,560)
+        position3 = (810,570)
+        position4 = (810,580)
+        positionOrigin = (810,550)
         clockPosition = (650, 650)
 
         if self.counts[partName]== 0:
@@ -338,12 +338,13 @@ class GameGUI():
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if is_rect((event.pos[0],event.pos[1]),self.start_parts[button]):
+                    if is_rect((event.pos[0],event.pos[1]),self.end_parts[button]):
                         self.__init__()
                         self.main_loop()
                 
                 if event.type == pygame.QUIT:
                     exit()
+                
 
     def game_time(self):
         print(self.score)
