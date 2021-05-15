@@ -19,8 +19,12 @@ class GameGUI():
         self.screen = pygame.display.set_mode((1920, 1080), 0, 32)
         self.score = 0 # score to trigger the events
         self.start_parts = {
-            "background":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg",1,2),
-            "button":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg")
+            "background":ScreenObject("./image/background.png",1,2),
+            "button":ScreenObject("./image/start.png")
+        }
+        self.end_parts = {
+            "background":ScreenObject("./image/button2.png",1,2),
+            "button":ScreenObject("./image/button2.png")
         }
         self.parsNames = ["background",
                             "water",
@@ -35,13 +39,13 @@ class GameGUI():
                             "clock_glasses",
                             "clock_bag",
                             "clock_phone",]
-        self.screenParts = {"background":ScreenObject("./../pics/background.png",0,0),
-                            "water":ScreenObject("./../pics/water.png",600,600),
+        self.screenParts = {"background":ScreenObject("./image/background.png",0,0),
+                            "water":ScreenObject("./image/water.png",600,600),
                             "legs":None,
                             "character":None,
-                            "umbrella":ScreenObject("./../pics/umbrella1.png",500,500),
+                            "umbrella":ScreenObject("./image/umbrella1.png",500,500),
                             "bag":None,
-                            "glasses":ScreenObject("./../pics/glasses.png",700,700),
+                            "glasses":ScreenObject("./image/glasses.png",700,700),
                             "phone":None,
                             "clock_umbrella":None,
                             "clock_water":None,
@@ -84,20 +88,20 @@ class GameGUI():
         self.callerNames = []
 
     def draw_clock(self,clockName,position,num):
-        self.screenParts[clockName] = ScreenObject("./../pics/clock.png",position[0],position[1])
+        self.screenParts[clockName] = ScreenObject("./image/clock.png",position[0],position[1])
         print("drawing")
-        pointer = ScreenObject("./../pics/pointer.png",position[0],position[1]).object
+        pointer = ScreenObject("./image/pointer.png",position[0],position[1]).object
         pointer = pygame.transform.rotate(pointer,num*90)
-        self.pointers[clockName] = ScreenObject("",position[0],position[1],pointer)
+        self.pointers[clockName] = ScreenObject("",position[0]+60,position[1]+60,pointer)
         self.update_frame()
 
 
     def umbrella_event(self):
-        path0 = "./../pics/umbrella1.png"
-        path1 = "./../pics/umbrella2.png"
-        path2 = "./../pics/umbrella3.png"
-        path3 = "./../pics/umbrella4.png"
-        pathOrigin = "./../pics/umbrella1.png"
+        path0 = "./image/umbrella1.png"
+        path1 = "./image/umbrella2.png"
+        path2 = "./image/umbrella3.png"
+        path3 = "./image/umbrella4.png"
+        pathOrigin = "./image/umbrella1.png"
         partName = "umbrella"
         clockName = "clock_umbrella"
 
@@ -132,8 +136,8 @@ class GameGUI():
                 self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
                 self.draw_clock(clockName, clockPosition, 4)
                 self.update_frame()
-                self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
-                self.pointers[clockName]= ScreenObject("./../pics/empty_clock.png")
+                self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+                self.pointers[clockName]= ScreenObject("./image/empty_clock.png")
                 pygame.time.set_timer(self.umbrellaEvent, 8000)
                 self.gameSystem.add_failure()
             # update the clock
@@ -144,7 +148,7 @@ class GameGUI():
         print(x,y)
         partName = "umbrella"
         clockName = "clock_umbrella"
-        pathOrigin = "./../pics/umbrella1.png"
+        pathOrigin = "./image/umbrella1.png"
         positionOrigin = (500,500)
 
         print(is_rect((x,y),self.screenParts[partName]))
@@ -154,8 +158,8 @@ class GameGUI():
             pygame.time.set_timer(self.umbrellaEvent,8000)
             self.counts[partName] = 0
             self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
-            self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
-            self.pointers[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
             self.update_frame()
             print("updated")
             print(self.screenParts)
@@ -164,11 +168,11 @@ class GameGUI():
 
 
     def water_event(self):
-        path0 = "./../pics/water.png"
-        path1 = "./../pics/water.png"
-        path2 = "./../pics/water.png"
-        path3 = "./../pics/water.png"
-        pathOrigin = "./../pics/water.png"
+        path0 = "./image/water.png"
+        path1 = "./image/water.png"
+        path2 = "./image/water.png"
+        path3 = "./image/water.png"
+        pathOrigin = "./image/water.png"
         partName = "water"
         clockName = "water"
 
@@ -203,8 +207,8 @@ class GameGUI():
                 self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
                 self.draw_clock(clockName, clockPosition, 4)
                 self.update_frame()
-                self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
-                self.pointers[clockName]= ScreenObject("./../pics/empty_clock.png")
+                self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+                self.pointers[clockName]= ScreenObject("./image/empty_clock.png")
                 pygame.time.set_timer(self.waterEvent, 8000)
                 self.gameSystem.add_failure()
 
@@ -212,7 +216,7 @@ class GameGUI():
     def click_in_water(self,x,y):
         print(x,y)
         partName = "water"
-        pathOrigin = "./../pics/water.png"
+        pathOrigin = "./image/water.png"
         positionOrigin = (500,500)
         clockName = "clock_water"
 
@@ -223,8 +227,8 @@ class GameGUI():
             pygame.time.set_timer(self.waterEvent,8000)
             self.counts[partName] = 0
             self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
-            self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
-            self.pointers[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
             self.update_frame()
             print("updated")
             print(self.screenParts)
@@ -232,11 +236,11 @@ class GameGUI():
 
 
     def glasses_event(self):
-        path0 = "./../pics/glasses.png"
-        path1 = "./../pics/glasses.png"
-        path2 = "./../pics/glasses.png"
-        path3 = "./../pics/glasses.png"
-        pathOrigin = "./../pics/glasses.png"
+        path0 = "./image/glasses.png"
+        path1 = "./image/glasses.png"
+        path2 = "./image/glasses.png"
+        path3 = "./image/glasses.png"
+        pathOrigin = "./image/glasses.png"
         partName = "glasses"
         clockName = "clock_glasses"
 
@@ -271,15 +275,15 @@ class GameGUI():
                 self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
                 self.draw_clock(clockName, clockPosition, 4)
                 self.update_frame()
-                self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
-                self.pointers[clockName]= ScreenObject("./../pics/empty_clock.png")
+                self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+                self.pointers[clockName]= ScreenObject("./image/empty_clock.png")
                 pygame.time.set_timer(self.glassesEvent, 8000)
                 self.gameSystem.add_failure()
 
     def click_in_glasses(self,x,y):
         print(x,y)
         partName = "glasses"
-        pathOrigin = "./../pics/glasses.png"
+        pathOrigin = "./image/glasses.png"
         positionOrigin = (500,500)
         clockName = "clock_glasses"
 
@@ -290,8 +294,8 @@ class GameGUI():
             pygame.time.set_timer(self.glassesEvent,8000)
             self.counts[partName] = 0
             self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
-            self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
-            self.pointers[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
             self.update_frame()
             print("updated")
             print(self.screenParts)
@@ -304,18 +308,47 @@ class GameGUI():
         pass
 
     def game_start(self):
+        button = "button"
+        self.start_parts[button] = ScreenObject("./image/button1.png",840,650)
+        self.start_parts["background"] = ScreenObject("./image/start.png")
+        
+        self.screen.blit(self.start_parts["background"].object,self.start_parts["background"].position)
+        self.screen.blit(self.start_parts[button].object,self.start_parts[button].position)
+        pygame.display.update()
         # start the game
-        self.main_loop()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if is_rect((event.pos[0],event.pos[1]),self.start_parts[button]):
+                        self.main_loop()
+                
+                if event.type == pygame.QUIT:
+                    exit()
 
     def game_end(self):
         # stop the game, restart, show the score
-        print("game over")
-        pass
+        button = "button"
+        self.end_parts[button] = ScreenObject("./image/button2.png",750,550)
+        self.end_parts["background"] = ScreenObject("./image/end.png")
+        
+        self.screen.blit(self.end_parts["background"].object,self.end_parts["background"].position)
+        self.screen.blit(self.end_parts[button].object,self.end_parts[button].position)
+        pygame.display.update()
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if is_rect((event.pos[0],event.pos[1]),self.start_parts[button]):
+                        self.__init__()
+                        self.main_loop()
+                
+                if event.type == pygame.QUIT:
+                    exit()
 
     def game_time(self):
         print(self.score)
         self.score+=1
-        if self.score == 5:
+        if self.score == 1:
             pygame.time.set_timer(self.umbrellaEvent,8000)
             pygame.time.set_timer(self.waterEvent,8000)
             pygame.time.set_timer(self.glassesEvent, 8000)
