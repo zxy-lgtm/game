@@ -20,7 +20,7 @@ class GameGUI():
             "button":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg")
         }
         self.screenParts = {"background":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg",0,0),
-                            "roads":None,
+                            "roads":ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png",150,90),
                             "legs":None,
                             "character":None,
                             "umbrella":ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png",50,50),
@@ -53,28 +53,38 @@ class GameGUI():
         self.timeCount = 1000
         self.callerNames = []
 
+
     def umbrella_event(self):
+        path0 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path1 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path2 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path3 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path4 = "C:\\Users\\91609\\Pictures\\Camera Roll\\1.png"
+        partName = "umbrella"
         if self.umbrellaEventCount == 0:
             pygame.time.set_timer(self.umbrellaEvent, 300)
             self.umbrellaEventCount = 10
-            self.screenParts["umbrella"] = ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\2.png",50,50)
+            self.screenParts[partName] = ScreenObject(path0,50,50)
             self.update_frame()
-            # start this event
-            # print the clock
         else:
             self.umbrellaEventCount -= 1
-
-            if self.umbrellaEventCount == 0:
-                self.screenParts["umbrella"] = ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png", 50, 50)
+            if self.umbrellaEventCount == 7:
+                self.screenParts[partName] = ScreenObject(path1, 55, 50)
+                self.update_frame()
+            elif self.umbrellaEventCount == 5:
+                self.screenParts[partName] = ScreenObject(path2, 60, 50)
+                self.update_frame()
+            elif self.umbrellaEventCount == 3:
+                self.screenParts[partName] = ScreenObject(path3, 65, 50)
+                self.update_frame()
+            elif self.umbrellaEventCount == 0:
+                self.screenParts[partName] = ScreenObject(path4, 50, 50)
                 self.update_frame()
                 pygame.time.set_timer(self.umbrellaEvent, 8000)
                 self.gameSystem.add_failure()
-
-            pass
             # update the clock
             # if fail add fail
 
-        pass
 
     def click_in_umbrella(self,x,y):
         print(x,y)
@@ -86,13 +96,36 @@ class GameGUI():
             self.screenParts["umbrella"] = ScreenObject("C:\\Users\\91609\\Pictures\\Camera Roll\\1.png", 50, 50)
             self.update_frame()
 
-        # stop the clock
-        # redraw the screen
 
-        pass
 
     def water_event(self):
-        pass
+        path0 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path1 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path2 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path3 = "C:\\Users\\91609\\Pictures\\Camera Roll\\2.png"
+        path4 = "C:\\Users\\91609\\Pictures\\Camera Roll\\1.png"
+        partName = "roads"
+        if self.waterEventCount == 0:
+            pygame.time.set_timer(self.waterEvent, 300)
+            self.waterEventCount = 10
+            self.screenParts[partName] = ScreenObject(path0,150,90)
+            self.update_frame()
+        else:
+            self.waterEventCount -= 1
+            if self.waterEventCount == 7:
+                self.screenParts[partName] = ScreenObject(path1, 150, 80)
+                self.update_frame()
+            elif self.waterEventCount == 5:
+                self.screenParts[partName] = ScreenObject(path2, 150, 70)
+                self.update_frame()
+            elif self.waterEventCount == 3:
+                self.screenParts[partName] = ScreenObject(path3, 150, 60)
+                self.update_frame()
+            elif self.waterEventCount == 0:
+                self.screenParts[partName] = ScreenObject(path4, 150, 90)
+                self.update_frame()
+                pygame.time.set_timer(self.waterEvent, 8000)
+                self.gameSystem.add_failure()
 
     def glasses_event(self):
         pass
@@ -117,6 +150,7 @@ class GameGUI():
         self.score+=1
         if self.score == 5:
             pygame.time.set_timer(self.umbrellaEvent,8000)
+            pygame.time.set_timer(self.waterEvent,8000)
         pass
 
     def update_frame(self):
