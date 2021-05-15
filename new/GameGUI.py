@@ -1,8 +1,11 @@
 from GameSystem import GameSystem
 import pygame
 
-def is_rect(pos,rect):
+def is_rect(pos,obj):
+    rect = obj.object.get_rect()
     x,y =pos
+    x -= obj.position[0]
+    y -= obj.position[1]
     rx,ry,rw,rh = rect
     if (rx <= x <=rx+rw)and(ry <= y <= ry +rh):
         return True
@@ -20,7 +23,7 @@ class GameGUI():
             "button":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg")
         }
         self.parsNames = ["background",
-                            "roads",
+                            "water",
                             "legs",
                             "character",
                             "umbrella",
@@ -33,12 +36,12 @@ class GameGUI():
                             "clock_bag",
                             "clock_phone",]
         self.screenParts = {"background":ScreenObject("./../pics/background.png",0,0),
-                            "roads":ScreenObject("./../pics/water.png",150,90),
+                            "water":ScreenObject("./../pics/water.png",600,600),
                             "legs":None,
                             "character":None,
-                            "umbrella":ScreenObject("./../pics/umbrella1.png",50,50),
+                            "umbrella":ScreenObject("./../pics/umbrella1.png",500,500),
                             "bag":None,
-                            "glasses":ScreenObject("./../pics/glasses.png",250,90),
+                            "glasses":ScreenObject("./../pics/glasses.png",700,700),
                             "phone":None,
                             "clock_umbrella":None,
                             "clock_water":None,
@@ -46,6 +49,13 @@ class GameGUI():
                             "clock_bag":None,
                             "clock_phone":None,
                             }
+        self.pointers = {
+            "clock_umbrella": None,
+            "clock_water": None,
+            "clock_glasses": None,
+            "clock_bag": None,
+            "clock_phone": None,
+        }
 
         self.COUNT = pygame.USEREVENT + 1 # main timer used to update the frame
         self.doubleClickEvent = pygame.USEREVENT+2
@@ -61,14 +71,25 @@ class GameGUI():
         self.glassesEventCount = 0
         self.bagEventCount = 0
         self.phoneEventCount = 0
+        self.counts = {
+            "umbrella":0,
+            "glasses":0,
+            "bag":0,
+            "water":0,
+            "phone":0,
+        }
 
         self.eventCount = 0
         self.timeCount = 1000
         self.callerNames = []
 
-    def draw_clock(self,clockName,position,case):
+    def draw_clock(self,clockName,position,num):
         self.screenParts[clockName] = ScreenObject("./../pics/clock.png",position[0],position[1])
-        self.screen.blit()
+        print("drawing")
+        pointer = ScreenObject("./../pics/pointer.png",position[0],position[1]).object
+        pointer = pygame.transform.rotate(pointer,num*90)
+        self.pointers[clockName] = ScreenObject("",position[0],position[1],pointer)
+        self.update_frame()
 
 
     def umbrella_event(self):
@@ -78,25 +99,41 @@ class GameGUI():
         path3 = "./../pics/umbrella4.png"
         pathOrigin = "./../pics/umbrella1.png"
         partName = "umbrella"
-        if self.umbrellaEventCount == 0:
+        clockName = "clock_umbrella"
+
+        position1 = (500,500)
+        position2 = (500,500)
+        position3 = (500,500)
+        position4 = (500,500)
+        positionOrigin = (500,500)
+        clockPosition = (500,500)
+
+        if self.counts[partName]== 0:
             pygame.time.set_timer(self.umbrellaEvent, 300)
-            self.umbrellaEventCount = 10
-            self.screenParts[partName] = ScreenObject(path0,500,500)
+            self.counts[partName] = 10
+            self.screenParts[partName] = ScreenObject(path0,position1[0],position1[1])
+            self.draw_clock(clockName,clockPosition,0)
             self.update_frame()
         else:
-            self.umbrellaEventCount -= 1
-            if self.umbrellaEventCount == 7:
-                self.screenParts[partName] = ScreenObject(path1, 500, 500)
+            self.counts[partName] -= 1
+            if self.counts[partName] == 7:
+                self.screenParts[partName] = ScreenObject(path1, position2[0],position2[1])
+                self.draw_clock(clockName, clockPosition, 1)
                 self.update_frame()
-            elif self.umbrellaEventCount == 5:
-                self.screenParts[partName] = ScreenObject(path2, 500, 500)
+            elif self.counts[partName] == 5:
+                self.screenParts[partName] = ScreenObject(path2, position3[0],position3[1])
+                self.draw_clock(clockName, clockPosition, 2)
                 self.update_frame()
-            elif self.umbrellaEventCount == 3:
-                self.screenParts[partName] = ScreenObject(path3, 500, 500)
+            elif self.counts[partName] == 3:
+                self.screenParts[partName] = ScreenObject(path3, position4[0],position4[1])
+                self.draw_clock(clockName, clockPosition, 3)
                 self.update_frame()
-            elif self.umbrellaEventCount == 0:
-                self.screenParts[partName] = ScreenObject(pathOrigin, 500, 500)
+            elif self.counts[partName] == 0:
+                self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
+                self.draw_clock(clockName, clockPosition, 4)
                 self.update_frame()
+                self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
+                self.pointers[clockName]= ScreenObject("./../pics/empty_clock.png")
                 pygame.time.set_timer(self.umbrellaEvent, 8000)
                 self.gameSystem.add_failure()
             # update the clock
@@ -105,13 +142,24 @@ class GameGUI():
 
     def click_in_umbrella(self,x,y):
         print(x,y)
-        rec = self.screenParts["umbrella"].object.get_rect()
-        if is_rect((x,y),rec) and self.umbrellaEventCount != 0:
+        partName = "umbrella"
+        clockName = "clock_umbrella"
+        pathOrigin = "./../pics/umbrella1.png"
+        positionOrigin = (500,500)
+
+        print(is_rect((x,y),self.screenParts[partName]))
+        print(self.counts[partName])
+        if is_rect((x,y),self.screenParts[partName]) and self.counts[partName] != 0:
             print("clicked")
             pygame.time.set_timer(self.umbrellaEvent,8000)
-            self.umbrellaEventCount = 0
-            self.screenParts["umbrella"] = ScreenObject("./../pics/umbrella1.png", 50, 50)
+            self.counts[partName] = 0
+            self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
+            self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./../pics/empty_clock.png")
             self.update_frame()
+            print("updated")
+            print(self.screenParts)
+
 
 
 
@@ -120,29 +168,68 @@ class GameGUI():
         path1 = "./../pics/water.png"
         path2 = "./../pics/water.png"
         path3 = "./../pics/water.png"
-        path4 = "./../pics/water.png"
-        partName = "roads"
-        if self.waterEventCount == 0:
+        pathOrigin = "./../pics/water.png"
+        partName = "water"
+        clockName = "water"
+
+        position1 = (600, 600)
+        position2 = (600, 620)
+        position3 = (600, 640)
+        position4 = (600, 660)
+        positionOrigin = (600, 680)
+        clockPosition = (650, 650)
+
+        if self.counts[partName]== 0:
             pygame.time.set_timer(self.waterEvent, 300)
-            self.waterEventCount = 10
-            self.screenParts[partName] = ScreenObject(path0,150,90)
+            self.counts[partName] = 10
+            self.screenParts[partName] = ScreenObject(path0,position1[0],position1[1])
+            self.draw_clock(clockName,clockPosition,0)
             self.update_frame()
         else:
-            self.waterEventCount -= 1
-            if self.waterEventCount == 7:
-                self.screenParts[partName] = ScreenObject(path1, 150, 80)
+            self.counts[partName] -= 1
+            if self.counts[partName] == 7:
+                self.screenParts[partName] = ScreenObject(path1, position2[0],position2[1])
+                self.draw_clock(clockName, clockPosition, 1)
                 self.update_frame()
-            elif self.waterEventCount == 5:
-                self.screenParts[partName] = ScreenObject(path2, 150, 70)
+            elif self.counts[partName] == 5:
+                self.screenParts[partName] = ScreenObject(path2, position3[0],position3[1])
+                self.draw_clock(clockName, clockPosition, 2)
                 self.update_frame()
-            elif self.waterEventCount == 3:
-                self.screenParts[partName] = ScreenObject(path3, 150, 60)
+            elif self.counts[partName] == 3:
+                self.screenParts[partName] = ScreenObject(path3, position4[0],position4[1])
+                self.draw_clock(clockName, clockPosition, 3)
                 self.update_frame()
-            elif self.waterEventCount == 0:
-                self.screenParts[partName] = ScreenObject(path4, 150, 90)
+            elif self.counts[partName] == 0:
+                self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
+                self.draw_clock(clockName, clockPosition, 4)
                 self.update_frame()
+                self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
+                self.pointers[clockName]= ScreenObject("./../pics/empty_clock.png")
                 pygame.time.set_timer(self.waterEvent, 8000)
                 self.gameSystem.add_failure()
+
+
+    def click_in_water(self,x,y):
+        print(x,y)
+        partName = "water"
+        pathOrigin = "./../pics/water.png"
+        positionOrigin = (500,500)
+        clockName = "clock_water"
+
+        print(is_rect((x,y),self.screenParts[partName]))
+        print(self.counts[partName])
+        if is_rect((x,y),self.screenParts[partName]) and self.counts[partName] != 0:
+            print("clicked_water")
+            pygame.time.set_timer(self.waterEvent,8000)
+            self.counts[partName] = 0
+            self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
+            self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.update_frame()
+            print("updated")
+            print(self.screenParts)
+
+
 
     def glasses_event(self):
         path0 = "./../pics/glasses.png"
@@ -152,28 +239,63 @@ class GameGUI():
         pathOrigin = "./../pics/glasses.png"
         partName = "glasses"
         clockName = "clock_glasses"
-        if self.glassesEventCount == 0:
+
+        position1 = (600, 600)
+        position2 = (600, 620)
+        position3 = (600, 640)
+        position4 = (600, 660)
+        positionOrigin = (600, 680)
+        clockPosition = (650, 650)
+
+        if self.counts[partName]== 0:
             pygame.time.set_timer(self.glassesEvent, 300)
-            self.glassesEventCount = 10
-            self.screenParts[partName] = ScreenObject(path0,250,90)
+            self.counts[partName] = 10
+            self.screenParts[partName] = ScreenObject(path0,position1[0],position1[1])
+            self.draw_clock(clockName,clockPosition,0)
             self.update_frame()
         else:
-            self.glassesEventCount -= 1
-            if self.glassesEventCount == 7:
-                self.screenParts[partName] = ScreenObject(path1, 250, 100)
+            self.counts[partName] -= 1
+            if self.counts[partName] == 7:
+                self.screenParts[partName] = ScreenObject(path1, position2[0],position2[1])
+                self.draw_clock(clockName, clockPosition, 1)
                 self.update_frame()
-            elif self.glassesEventCount == 5:
-                self.screenParts[partName] = ScreenObject(path2, 250, 110)
+            elif self.counts[partName] == 5:
+                self.screenParts[partName] = ScreenObject(path2, position3[0],position3[1])
+                self.draw_clock(clockName, clockPosition, 2)
                 self.update_frame()
-            elif self.glassesEventCount == 3:
-                self.screenParts[partName] = ScreenObject(path3, 250, 120)
+            elif self.counts[partName] == 3:
+                self.screenParts[partName] = ScreenObject(path3, position4[0],position4[1])
+                self.draw_clock(clockName, clockPosition, 3)
                 self.update_frame()
-            elif self.glassesEventCount == 0:
-                self.screenParts[partName] = ScreenObject(pathOrigin, 250, 90)
-                self.screenParts[clockName] = None
+            elif self.counts[partName] == 0:
+                self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
+                self.draw_clock(clockName, clockPosition, 4)
                 self.update_frame()
+                self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
+                self.pointers[clockName]= ScreenObject("./../pics/empty_clock.png")
                 pygame.time.set_timer(self.glassesEvent, 8000)
                 self.gameSystem.add_failure()
+
+    def click_in_glasses(self,x,y):
+        print(x,y)
+        partName = "glasses"
+        pathOrigin = "./../pics/glasses.png"
+        positionOrigin = (500,500)
+        clockName = "clock_glasses"
+
+        print(is_rect((x,y),self.screenParts[partName]))
+        print(self.counts[partName])
+        if is_rect((x,y),self.screenParts[partName]) and self.counts[partName] != 0:
+            print("clicked_glasses")
+            pygame.time.set_timer(self.glassesEvent,8000)
+            self.counts[partName] = 0
+            self.screenParts[partName] = ScreenObject(pathOrigin, positionOrigin[0],positionOrigin[1])
+            self.screenParts[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./../pics/empty_clock.png")
+            self.update_frame()
+            print("updated")
+            print(self.screenParts)
+
 
     def bag_event(self):
         pass
@@ -204,8 +326,10 @@ class GameGUI():
             if self.screenParts[name] != None:
                 self.screen.blit(self.screenParts[name].object,self.screenParts[name].position)
 
-
-        pygame.display.update()
+        for _,v in self.pointers.items():
+            if v != None:
+                self.screen.blit(v.object,v.position)
+        pygame.display.flip()
         # start events
         # update the frame
 
@@ -242,6 +366,7 @@ class GameGUI():
                     elif self.doubleClickEventCount == 1:
                         self.doubleClickEventCount = 0
                         pygame.time.set_timer(self.doubleClickEvent,0)
+                        self.click_in_water(event.pos[0],event.pos[1])
                         # check the one click event and double click event
                         pass
 
@@ -261,9 +386,13 @@ class GameGUI():
 
 class ScreenObject():
 
-    def __init__(self,path,x=0,y=0):
-        self.object = pygame.image.load(path).convert_alpha()
-        self.position = (x,y)
+    def __init__(self,path,x=0,y=0,screen = None):
+        if screen == None:
+            self.object = pygame.image.load(path).convert_alpha()
+            self.position = (x,y)
+        else:
+            self.object = screen.convert_alpha()
+            self.position = (x,y)
 
 if __name__ == "__main__":
     game = GameGUI()
