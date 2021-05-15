@@ -6,9 +6,26 @@ class GameGUI():
     def __init__(self):
         pygame.init()
         self.gameSystem = GameSystem()
-        self.screen = pygame.display.set_mode((600, 800), 0, 32)
+        self.screen = pygame.display.set_mode((1280, 720), 0, 32)
         self.score = 0 # score to trigger the events
-        self.clocks = []
+        self.start_parts = {
+            "background":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg",1,2),
+            "button":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg")
+        }
+        self.screenParts = {"background":ScreenObject("C:\\Users\\91609\\Pictures\\_DSC7985.jpg",0,0),
+                            "roads":None,
+                            "legs":None,
+                            "character":None,
+                            "umbrella":None,
+                            "bag":None,
+                            "glasses":None,
+                            "phone":None,
+                            "clock_umbrella":None,
+                            "clock_water":None,
+                            "clock_glasses":None,
+                            "clock_bag":None,
+                            "clock_phone":None,
+                            }
 
         self.COUNT = pygame.USEREVENT + 1 # main timer used to update the frame
         self.doubleClickEvent = pygame.USEREVENT+2
@@ -32,7 +49,7 @@ class GameGUI():
     def umbrella_event(self):
         if self.umbrellaEventCount == 0:
             pygame.time.set_timer(self.umbrellaEvent, 300)
-            self.umbrellaEventCount = 11
+            self.umbrellaEventCount = 10
             pass
             # start this event
             # print the clock
@@ -41,7 +58,7 @@ class GameGUI():
 
             pass
             # update the clock
-            # if over add fail
+            # if fail add fail
 
         pass
 
@@ -75,8 +92,53 @@ class GameGUI():
         # stop the game, restart, show the score
         pass
 
+    def game_time(self):
+        self.score+=1
+        if self.score == 5:
+            pygame.time.set_timer(self.umbrellaEvent,)
+        pass
+
     def update_frame(self):
-        self.score += 1
+        if self.screenParts["background"] != None:
+            self.screen.blit(self.screenParts["background"].object,self.screenParts["background"].position)
+
+        if self.screenParts["roads"] != None:
+            self.screen.blit(self.screenParts["roads"].object, self.screenParts["roads"].position)
+
+        if self.screenParts["legs"] != None:
+            self.screen.blit(self.screenParts["legs"].object, self.screenParts["legs"].position)
+
+        if self.screenParts["character"] != None:
+            self.screen.blit(self.screenParts["character"].object, self.screenParts["character"].position)
+
+        if self.screenParts["umbrella"] != None:
+            self.screen.blit(self.screenParts["umbrella"].object, self.screenParts["umbrella"].position)
+
+        if self.screenParts["bag"] != None:
+            self.screen.blit(self.screenParts["bag"].object, self.screenParts["bag"].position)
+
+        if self.screenParts["glasses"] != None:
+            self.screen.blit(self.screenParts["glasses"].object, self.screenParts["glasses"].position)
+
+        if self.screenParts["phone"] != None:
+            self.screen.blit(self.screenParts["phone"].object, self.screenParts["phone"].position)
+
+        if self.screenParts["clock_umbrella"] != None:
+            self.screen.blit(self.screenParts["clock_umbrella"].object, self.screenParts["clock_umbrella"].position)
+
+        if self.screenParts["clock_water"] != None:
+            self.screen.blit(self.screenParts["clock_water"].object, self.screenParts["clock_water"].position)
+
+        if self.screenParts["clock_glasses"] != None:
+            self.screen.blit(self.screenParts["clock_glasses"].object, self.screenParts["clock_glasses"].position)
+
+        if self.screenParts["clock_bag"] != None:
+            self.screen.blit(self.screenParts["clock_bag"].object, self.screenParts["clock_bag"].position)
+
+        if self.screenParts["clock_phone"] != None:
+            self.screen.blit(self.screenParts["clock_phone"].object, self.screenParts["clock_phone"].position)
+
+        pygame.display.update()
         # start events
         # update the frame
 
@@ -84,7 +146,9 @@ class GameGUI():
         pygame.time.set_timer(self.COUNT, self.timeCount)
         while True:
             if self.gameSystem.check_fail():
-                self.game_end()
+                break
+
+            self.update_frame()
             for event in pygame.event.get():
                 if event.type == self.umbrellaEvent:
                     self.umbrella_event()
@@ -100,9 +164,6 @@ class GameGUI():
 
                 if event.type == self.phoneEvent:
                     self.phone_event()
-
-                if event.type == self.COUNT:
-                    self.update_frame()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.doubleClickEventCount == 0:
@@ -122,13 +183,24 @@ class GameGUI():
                     self.doubleClickEventCount = 0
                     pygame.time.set_timer(self.doubleClickEvent, 0)
 
+                if event.type == self.COUNT:
+                    self.game_time()
+
                 if event.type == pygame.QUIT:
                     exit()
+        self.game_end()
 
     def reset_timer(self,num):
         pygame.time.set_timer(self.COUNT,num)
 
+class ScreenObject():
 
+    def __init__(self,path,x=0,y=0):
+        self.object = pygame.image.load(path).convert_alpha()
+        self.position = (x,y)
 
+if __name__ == "__main__":
+    game = GameGUI()
+    game.game_start()
 
 
