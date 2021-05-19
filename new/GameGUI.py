@@ -47,11 +47,11 @@ class GameGUI():
                             "clock_phone",]
         self.screenParts = {"background":ScreenObject("./image/background.png",0,0),
                             "water":ScreenObject("./image/water.png",600,600),
-                            "leftleg":None,
-                            "rightleg":None,
+                            "leftleg":ScreenObject("./image/leftleg.png",835,900),
+                            "rightleg":ScreenObject("./image/rightleg.png",945,900),
                             "character":ScreenObject("./image/character.png",700,300),
                             "umbrella":ScreenObject("./image/umbrella1.png",630,180),
-                            "bag":ScreenObject("./image/bag.png",0,0),
+                            "bag":ScreenObject("./image/bag.png",780,660),
                             "glasses":ScreenObject("./image/glasses.png",810,550),
                             "phone":None,
                             "clock_umbrella":None,
@@ -298,7 +298,7 @@ class GameGUI():
         print(x,y)
         partName = "glasses"
         pathOrigin = "./image/glasses.png"
-        positionOrigin = (500,500)
+        positionOrigin = (810,550)
         clockName = "clock_glasses"
 
         print(is_rect((x,y),self.screenParts[partName]))
@@ -415,49 +415,49 @@ class GameGUI():
                 print(self.isGood)
                 print(self.gameSystem.failNum)
 
-        def click_in_phone(self,x,y):
-            print(x,y)
-            partName = "phone"
-            pathOrigin = "./image/empty_clock.png"
-            positionOrigin = (0,0)
-            clockName = "clock_phone"
+    def click_in_phone(self,x,y):
+        print(x,y)
+        partName = "phone"
+        pathOrigin = "./image/empty_clock.png"
+        positionOrigin = (0,0)
+        clockName = "clock_phone"
 
-            print(is_rect((x,y),self.screenParts[partName]))
-            print(self.counts[partName])
-            print(self.screenParts[partName].position)
-            print(self.screenParts[partName].object.get_rect())
-            _,_, rw,rh = self.screenParts[partName].object.get_rect()
-            midx = rw//2
-            midy = rh//2
-            x -= self.screenParts[partName].position[0]
-            y -= self.screenParts[partName].position[1]
-            if is_in(x,y,0,midy,midx,rh):
-                self.counts[partName]=0
-                self.screenParts[partName] = ScreenObject("./image/empty_clock.png")
-                self.update_frame()
-                self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
-                self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
-                pygame.time.set_timer(self.phoneEvent, 8000)
-                if self.isGood:
-                    pass
-                else:
-                    self.gameSystem.add_failure()
-                    print("-------fail")
-            elif is_in(x,y,midx,midy,rw,rh):
-                self.counts[partName] = 0
-                self.screenParts[partName] = ScreenObject("./image/empty_clock.png")
-                self.update_frame()
-                self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
-                self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
-                pygame.time.set_timer(self.phoneEvent, 8000)
-                if self.isGood:
-                    self.gameSystem.add_failure()
-                    print("------fail")
-                else:
-                    pass
-
+        print(is_rect((x,y),self.screenParts[partName]))
+        print(self.counts[partName])
+        print(self.screenParts[partName].position)
+        print(self.screenParts[partName].object.get_rect())
+        _,_, rw,rh = self.screenParts[partName].object.get_rect()
+        midx = rw//2
+        midy = rh//2
+        x -= self.screenParts[partName].position[0]
+        y -= self.screenParts[partName].position[1]
+        if is_in(x,y,0,midy,midx,rh):
+            self.counts[partName]=0
+            self.screenParts[partName] = ScreenObject("./image/empty_clock.png")
+            self.update_frame()
+            self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
+            pygame.time.set_timer(self.phoneEvent, 8000)
+            if self.isGood:
+                pass
             else:
-                print("no")
+                self.gameSystem.add_failure()
+                print("-------fail")
+        elif is_in(x,y,midx,midy,rw,rh):
+            self.counts[partName] = 0
+            self.screenParts[partName] = ScreenObject("./image/empty_clock.png")
+            self.update_frame()
+            self.screenParts[clockName] = ScreenObject("./image/empty_clock.png")
+            self.pointers[clockName] = ScreenObject("./image/empty_clock.png")
+            pygame.time.set_timer(self.phoneEvent, 8000)
+            if self.isGood:
+                self.gameSystem.add_failure()
+                print("------fail")
+            else:
+                pass
+
+        else:
+            print("no")
 
 
     def game_start(self):
@@ -486,6 +486,7 @@ class GameGUI():
         
         self.screen.blit(self.end_parts["background"].object,self.end_parts["background"].position)
         self.screen.blit(self.end_parts[button].object,self.end_parts[button].position)
+
         pygame.display.update()
 
         while True:
@@ -565,6 +566,7 @@ class GameGUI():
                         try:
                             self.click_in_umbrella(event.pos[0],event.pos[1])
                             self.click_in_phone(event.pos[0],event.pos[1])
+                            self.click_in_glasses(event.pos[0],event.pos[1])
                         except Exception as e:
                             print(e)
 
@@ -575,6 +577,7 @@ class GameGUI():
                             self.click_in_water(event.pos[0],event.pos[1])
                             self.click_in_umbrella(event.pos[0], event.pos[1])
                             self.click_in_phone(event.pos[0], event.pos[1])
+                            self.click_in_glasses(event.pos[0],event.pos[1])
                         except Exception as e:
                             print(e)
                         # check the one click event and double click event
